@@ -53,7 +53,7 @@ public class TreeNode
         return this.left == null && this.right == null;
     }
 
-    //Methods to save tree to file "filename.txt"
+    //Methods to save tree to a file
     public void saveToFile(String filename)
     {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(filename)))
@@ -63,7 +63,7 @@ public class TreeNode
         }
         catch (IOException e)
         {
-            System.out.println("Error saving the tree to " + filename);
+            System.out.println("Error" + e.getMessage() + ",saving the tree to " + filename);
         }
     }
 
@@ -82,7 +82,7 @@ public class TreeNode
         saveToFile(current.getRight(), bw);
     }
 
-    //Methods to load tree from file "filename.txt"
+    //Methods to load tree from a file
     public static TreeNode loadFromFile(String filename)
     {
         try (BufferedReader br = new BufferedReader(new FileReader(filename)))
@@ -91,7 +91,7 @@ public class TreeNode
         }
         catch (IOException e)
         {
-            System.out.println("Error loading the tree from " + filename);
+            System.out.println("Error: " + e + ", loading the tree from " + filename);
             return null;
         }
     }
