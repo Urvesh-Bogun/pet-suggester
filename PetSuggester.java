@@ -3,90 +3,133 @@ import java.util.Scanner;
 public class PetSuggester
 {
 
-    public static Scanner reader = new Scanner(System.in);
+    public static Scanner kbd = new Scanner(System.in);
     private TreeNode root;
     
+    //Construction of initial tree
     public PetSuggester()
     {
         root = new TreeNode("Do you like dogs?",
                                 new TreeNode("Do you prefer big dogs?",
-                                        new TreeNode("A golden retriever"),
-                                        new TreeNode("A chihauhau")),
-                            new TreeNode("An iguana"));
+                                        new TreeNode("a golden retriever"),
+                                        new TreeNode("a chihauhau")),
+                            new TreeNode("an iguana"));
+    }
+
+    //Getters and setters
+    public TreeNode getRoot()
+    {
+        return root;
+    }
+
+    public void setRoot(TreeNode newRoot)
+    {
+        root = newRoot;
     }
     
+    //Recursive method to traverse along the tree
     public void path()
     {
         root = path(root); 
     }
     
+    //Method to either print leaf and replace if user is unsatisfied or traverse tree
     private TreeNode path(TreeNode current)
     {
         if (current.isLeaf())
         {
-            System.out.println(current.QorA);
-            if (askYesNo("Is this satisfactory?"))
-            {
-                System.out.println();
-            }
-            else
+            System.out.println("Perhaps you would like " + current.getValue());
+            if (!(askYesNo("Is this satisfactory?")))
             {
                 System.out.print("What is the preferred animal?");
-                System.out.println(" ");
-                TreeNode answer = new TreeNode(reader.nextLine());
-                System.out.println("Tell me a question that distinguishes my sugestion from your answer");
-                System.out.println(" ");
-                String question = reader.nextLine();
-                current = new TreeNode(question, answer, current); 
+                String input = kbd.nextLine();
+                TreeNode newNode = new TreeNode(input);
+                System.out.println("Tell me a question that distinguishes " + current.getValue() + " from " + input);
+                String question = kbd.nextLine();
+                if(askYesNo(question))
+                {
+                    current = new TreeNode(question, newNode, current);
+                }
+                else
+                {
+                    current = new TreeNode(question, current, newNode);
+                } 
             } 
         }
         else
         {
-            if (askYesNo(current.QorA)) 
+            if (askYesNo(current.getValue())) 
             {
-                current.left = path(current.left);
+                current.setLeft(path(current.getLeft()));
             }
             else
             {
-                current.right = path(current.right); 
+                current.setRight(path(current.getRight()));
             }   
         } 
-      return current;
-   }
+        return current;
+    }
    
-    public static void main(String[] args)
+   //Main method creating the initial tree or loading one from "suggestions.txt" then saving it at the end if wanted
+   public static void main(String[] args)
     {
-     
-        System.out.println(" ");
-        System.out.println(" ");                    
-        System.out.println("Welcome! Let's help you find a pet.");      
-        
-        System.out.println(" ");
-        
+        System.out.println("Welcome! Let's help you find a pet.");
+   
         PetSuggester tree = new PetSuggester();
-        do
+   
+        try
         {
-            tree.path();
-        } while (tree.askYesNo("Do you want to go again?"));
+            if (askYesNo("Do you want to load a saved tree?"))
+            {
+                TreeNode loadedRoot = TreeNode.loadFromFile("suggestions.txt");
+                if (loadedRoot != null)
+                {
+                    tree.setRoot(loadedRoot);
+                    System.out.println("Tree loaded from suggestions.txt");
+                }
+                else
+                {
+                    System.out.println("No saved tree found.");
+                }
+            }
+   
+            do
+            {
+                tree.path();
+           } while (askYesNo("Do you want to go again?"));
+   
+            if (askYesNo("Do you want to save the current tree?"))
+            {
+                tree.getRoot().saveToFile("suggestions.txt");
+            }
+        } catch (Exception e)
+        {
+            System.out.println("An error occurred: " + e.getMessage());
+        } finally 
+        {
+            kbd.close();
+        }
     }
 
-    
-    public static boolean askYesNo(String ans)
+    //Boolean to retrieve answer for yes no questions
+    public static boolean askYesNo(String question)
     {
-        System.out.print(ans + "[y/n]");
-        System.out.println(" ");
-        ans = reader.nextLine();
-        if (ans.equalsIgnoreCase("y"))
+        boolean loop = true;
+        String ans = "";
+        while(loop)
         {
-            return true;
+            System.out.print(question + " [y/n]: ");
+            ans = kbd.nextLine().trim();
+            if (ans.equalsIgnoreCase("y") || ans.equalsIgnoreCase("n"))
+            {
+                loop = false;
+            }
+            else
+            {
+                System.out.println("Invalid input. Please enter 'y' for yes or 'n' for no.");
+            }
         }
-        else
-        {
-            return false;
-        }
+        return ans.equalsIgnoreCase("y");
     }
     
-      
-  
 }
-

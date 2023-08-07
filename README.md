@@ -1,2 +1,3 @@
 # pet-suggester
- 
+Welcome to the Pet Suggester project! This Java program helps you find a pet by guiding you through a decision tree based on your preferences. You'll be asked a series of questions, and your answers will lead to suggested pets or the opportunity to expand the decision tree with new pet preferences.
+The Pet Suggester program is implemented using the PetSuggester class and the TreeNode class. The TreeNode class represents nodes in a binary tree data structure, where each node holds a question or a pet suggestion. The PetSuggester class provides an interactive interface to guide users through the decision tree.
