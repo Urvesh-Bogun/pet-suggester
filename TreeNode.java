@@ -21,7 +21,7 @@ public class TreeNode
         this.right = right;
     }
 
-    //getters and setters
+    //Getters and setters
     public String getValue()
     {
         return this.value;
@@ -47,7 +47,7 @@ public class TreeNode
         this.right = right;
     }
 
-    //boolean to check if TreeNode is a leaf or not
+    //Boolean to check if TreeNode is a leaf or not
     public boolean isLeaf()
     {
         return this.left == null && this.right == null;
